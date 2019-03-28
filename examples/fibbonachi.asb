@@ -1,0 +1,30 @@
+@data
+
+    vinput def 0b
+    voutput def 0b
+    vone def 1b
+
+    vman_count def 0b
+
+    vfib_temp_prev def 0b
+    vfib_temp def 0b
+    vfib_temp_internal def 0b
+
+@program
+
+    in var_input
+    mov vman_count var_input
+
+@procedure manager 
+
+    exec fibbonachi
+    sub vman_count vone
+    execif vman_count manager
+
+@procedure fibbonachi
+    
+    mov vfib_temp_internal vfib_temp_prev
+    add vfib_temp_internal vfib_temp
+    mov vfib_temp_prev vfib_temp
+    mov vfib_temp vfib_temp_internal
+    
