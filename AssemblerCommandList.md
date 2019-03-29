@@ -1,22 +1,17 @@
 # Assembler Commands List
 
-* **def**
-    
+* Definition of variables
+
+    All variables should be defined in `.var` section
+
     Usage:
     ```
-    [VARIABLE_NAME] def [VALUE]
+    [VARIABLE_NAME] [VALUE]
     ```
-    This command defines 4-bytes variable with the name `VARIABLE_NAME` equals to `VALUE`. The `VALUE` can have the following appearance:
-    
-    * `1001010b` . The final symbol `b` means that the preceding number should be interpreted as the bynary number
+     This command defines 4-bytes variable with the name `VARIABLE_NAME` equals to `VALUE`. The `VALUE` should be binary number
 
-    * `1234566d` . The final symbol `d` means that the preceding number should be interpreted as the decimal number
 
-    * `AB12EFh` . The final symbol `h` means that the preceding number should be interpreted as the hex number
-
-    All `def` commands should be located in `@data` section
-
-* **mov** 
+* **mov** command
 
     Usage:
     ```
@@ -28,7 +23,7 @@
 
     Usage:
     ```
-    exec [PROCEDURE_NAME]
+    exec [FUNCTION_NAME] [INPUT_VAR_1 INPUT_VAR_2 ...] [OUTPUT_VAR_1 OUTPUT_VAR_2 ...]
     ```
 
     This command ivokes the procedure which has name `PROCEDURE_NAME`
@@ -38,7 +33,7 @@
 
     Usage:
     ```
-    execif [VARIABLE_NAME] [PROCEDURE_NAME]
+    execif [VARIABLE_NAME] [FUNCTION_NAME] [INPUT_VAR_1 INPUT_VAR_2 ...] [OUTPUT_VAR_1 OUTPUT_VAR_2 ...]
     ```
 
     This command invokes the procedure if the variable with `VARIABLE_NAME` name is not equal to zero
@@ -56,12 +51,25 @@
 
     Usage:
     ```
-    @procedure proc
-        # code here
+    @my_func
+        ...
         ret
     ```
 
     This command returns the cotrol to the place, where the procedure has been invoked
+
+* **retif**
+
+    Usage:
+    ```
+    @my_func
+        ...
+        retif [VARIABLE_NAME]
+        ...
+        ret
+    ```
+
+    This command returns the control if the variable, which has `VARIABLE_NAME` name, equal to zero
 
 * **add** 
 
@@ -102,77 +110,99 @@
 
 # Assembler program rules
 
-There are three different section of program, written on assembler:
+The assembler supports the following sintaxis:
+Each program consists of special sections with code, each of them starts with
+the following:
+```
+@[SECTION_NAME]
+```
+Each section consists of subsections, each of them starts with the following:
+```
+    .[SUBSECTION_NAME]
+```
 
-* **@data** section
+The program should contain `@main` code section
 
-    This is the first section in the program code
+## `@main` code section
 
-    In this section all variables, used in the program are defined, using `def` command:
+This section contains following subsections:
 
-    Usage:
-    
-    ```
-    @data
+* **.var** subsection
 
-    var_1 def 1b
-    var_2 def 101b
-    
-    ```
+This subsection defines variables, used in the section
 
-* **@program** section
+* **.code** subsection
 
-    This is the second section in the program code.
-    This section includes the main program, which is launched in the VM.
-    The program should be finished with `term` command
-    
-    Usage:
+This subsection defines code, performed in the section
+Note, that this code is launched on the Virtual Machine
 
-    ```
-    @program
-    add var_1 var_2
-    ...
-    term
-    ```
+## Other code sections
 
-* **@procedure** section
+Such code sections can be considered as functions
+This section contains following subsections:
 
-    This function defines the procedure, which can be invoked from the main program or from the other procedures. The procedure should be finished with `ret` command
+* **.input** subsection
 
-    Usage:
+This subsections defines variables, provided by called code
 
-    ```
-    @procedure [PROCEDURE_NAME]
+* **.output** subsection
 
-    sub var_1 var_2
-    ...
-    ret
-    ```
+This subsection defines the variables storing the result of the function and accessed from called code 
+
+* **.var** subsection
+
+Local variables of the subsection
+
+* **.code** subsection
+
+Code of the subsection to perform
+
 
 ## Example
 
 This is the simple program, written using assembler
+This function computes the n-th number of fibbonachi
 
 ```
-@data
+@main
 
-    a def 0b
-    one def 1b
-    add_one_var def 0b
+    .var
+        input 0b
+        output 0b
 
-@program
+    .code
+        in input
+        fibbonachi input output
+        out output
+        term
 
-    in a
-    mov add_one_var a
-    exec add_one 
-    mov a add_one_var
-    out a
-    term
+@fibbonachi
+    
+    .input
+        n
+    
+    .output
+        fib_n
+    
+    .var
+        fib_n_minus_one 0b
+        fib_n_minus_two 0b
+        one 1b
+        zero 0b
 
-@procedure add_one
-
-    add add_one_var one
-    ret
+    .code
+        mov fib_n zero
+        retif n 
+        sub n one
+        mov fib_n one
+        retif n 
+        exec fibbonachi n fib_n_minus_one
+        sub n one
+        exec fibbonachi n fib_n_minus_two
+        mov fib_n zero
+        add fib_n fib_n_minus_one
+        add fib_n fib_n_minus_two
+        ret
 ```
     
     

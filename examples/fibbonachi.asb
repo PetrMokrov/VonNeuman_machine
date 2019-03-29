@@ -1,30 +1,46 @@
-@data
+@main
 
-    vinput def 0b
-    voutput def 0b
-    vone def 1b
+    .var
+        input 0
+        output 0
 
-    vman_count def 0b
+    .code
+        in input
+        exec fibbonachi input output
+        out output
+        term
 
-    vfib_temp_prev def 0b
-    vfib_temp def 0b
-    vfib_temp_internal def 0b
-
-@program
-
-    in var_input
-    mov vman_count var_input
-
-@procedure manager 
-
-    exec fibbonachi
-    sub vman_count vone
-    execif vman_count manager
-
-@procedure fibbonachi
+@fibbonachi
     
-    mov vfib_temp_internal vfib_temp_prev
-    add vfib_temp_internal vfib_temp
-    mov vfib_temp_prev vfib_temp
-    mov vfib_temp vfib_temp_internal
+    .input
+        n
+    
+    .output
+        fib_n
+    
+    .var
+        fib_n_minus_one 0
+        fib_n_minus_two 0
+        one 1
+        zero 0
+
+    .code
+        mov fib_n zero
+        retif n 
+        sub n one
+        mov fib_n one
+        retif n 
+        exec fibbonachi n fib_n_minus_one
+        sub n one
+        exec fibbonachi n fib_n_minus_two
+        mov fib_n zero
+        add fib_n fib_n_minus_one
+        add fib_n fib_n_minus_two
+        ret
+
+
+        
+
+
+
     
