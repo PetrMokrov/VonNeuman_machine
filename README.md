@@ -2,7 +2,7 @@
 
 ## About 
 
-This project includes realisation of Virtual Machine, based on Von Neuman architecture concept.
+This project includes realisation of a Virtual Machine, based on Von Neuman architecture concept.
 The VM is implemented on python.
 
 ## Usage
@@ -17,7 +17,7 @@ To compile the program, use `.\sources\compiler.py` script:
 
 Supported command line arguments for `.\sources\comiler.py` are following:
 * **--source** **-s** \[PATH_TO_PROGRAM_FILE\] specifies the file with the program to compile
-* **--name** **-n** \[DESIRED_BIN_FILE_NAME\] specifies the name of binary file with the comiled program. All binary files are stored in `.\bin\` directory
+* **--name** **-n** \[DESIRED_BIN_FILE_NAME\] specifies the name of binary file with the compiled program. All binary files are stored in `.\bin\` directory
 
 The example of using the script:
 ```
