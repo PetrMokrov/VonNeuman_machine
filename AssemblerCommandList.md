@@ -23,7 +23,9 @@
 
     Usage:
     ```
-    exec [FUNCTION_NAME] [INPUT_VAR_1 INPUT_VAR_2 ...] [OUTPUT_VAR_1 OUTPUT_VAR_2 ...]
+    exec [FUNCTION_NAME] 
+        .input [INPUT_VAR_1 INPUT_VAR_2 ...] 
+        .output [OUTPUT_VAR_1 OUTPUT_VAR_2 ...]
     ```
 
     This command ivokes the procedure which has name `PROCEDURE_NAME`
@@ -33,7 +35,9 @@
 
     Usage:
     ```
-    execif [VARIABLE_NAME] [FUNCTION_NAME] [INPUT_VAR_1 INPUT_VAR_2 ...] [OUTPUT_VAR_1 OUTPUT_VAR_2 ...]
+    execif [VARIABLE_NAME] [FUNCTION_NAME] 
+        .input [INPUT_VAR_1 INPUT_VAR_2 ...] 
+        .output [OUTPUT_VAR_1 OUTPUT_VAR_2 ...]
     ```
 
     This command invokes the procedure if the variable with `VARIABLE_NAME` name is not equal to zero

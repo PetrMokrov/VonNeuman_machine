@@ -6,7 +6,9 @@
 
     .code
         in input
-        exec fibbonachi input output
+        exec fibbonachi 
+            .input input 
+            .output output
         out output
         term
 
@@ -30,9 +32,13 @@
         sub n one
         mov fib_n one
         retif n 
-        exec fibbonachi n fib_n_minus_one
+        exec fibbonachi 
+            .input n 
+            .output fib_n_minus_one
         sub n one
-        exec fibbonachi n fib_n_minus_two
+        exec fibbonachi 
+            .input n 
+            .output fib_n_minus_two
         mov fib_n zero
         add fib_n fib_n_minus_one
         add fib_n fib_n_minus_two

@@ -1,0 +1,10 @@
+@main
+
+    .var
+        input 0
+        output 0
+
+    .code
+        in input
+        out output
+        term
