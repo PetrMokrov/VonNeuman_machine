@@ -164,7 +164,7 @@ Code of the subsection to perform
 
 ## Example
 
-This is the simple program, written using assembler
+This is the simple program, written using assembler.
 This function computes the n-th number of fibbonachi
 
 ```
