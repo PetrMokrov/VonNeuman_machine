@@ -348,9 +348,9 @@ def set_offsets(binary_code, function):
 
     offset = 0
     for var in reversed(list(function.variables.keys())):
-        offset += 4
         binary_code.append(offset.to_bytes(4, byteorder='big'))
         variable_offsets_addresses[var] = tail_address(binary_code)
+        offset += 4
     
     if function.name == 'main':
         # add offsets only for variables
@@ -358,18 +358,17 @@ def set_offsets(binary_code, function):
     
     # add offsets for input variables
     for var in reversed(function.input_variables):
-        offset += 4
         binary_code.append(offset.to_bytes(4, byteorder='big'))
         variable_offsets_addresses[var] = tail_address(binary_code)
+        offset += 4
     
     # add offsets for output variables
     for var in reversed(function.output_variables):
-        offset += 4
         binary_code.append(offset.to_bytes(4, byteorder='big'))
         variable_offsets_addresses[var] = tail_address(binary_code)
+        offset += 4
     
     # add special ret symbol offset:
-    offset += 4
     binary_code.append(offset.to_bytes(4, byteorder='big'))
     variable_offsets_addresses['ret'] = tail_address(binary_code)
     return variable_offsets_addresses
@@ -625,9 +624,12 @@ def set_exec(binary_code, command, lsp_address, variable_offsets_addresses, func
         func_address = (func_index*4).to_bytes(4, byteorder='big')
         binary_code.append(func_address)
     
-    # specification The address to return 
+    # specification The address to return
+    binary_code.append((0).to_bytes(4, byteorder='big')) 
     addr_to_return = (len(binary_code)*4).to_bytes(4, byteorder="big")
-    binary_code[return_address_index] = addr_to_return
+    binary_code[len(binary_code) - 1] = addr_to_return
+    addr_to_add = ((len(binary_code) - 1)*4).to_bytes(4, byteorder="big")
+    binary_code[return_address_index] = addr_to_add
 
     ###################
     ### clean stack ###
@@ -797,7 +799,8 @@ def set_function(binary_code, func, functions_indices):
                 variable_offsets_addresses)
 
 def set_instraction_pointer(binary_code, functions_indices):
-    binary_code[0] = (functions_indices['main']*4).to_bytes(4, byteorder='big')
+    # ptr_to_start = binary_code[functions_indices['main']]
+    binary_code[0] = binary_code[functions_indices['main']]
 
 def set_stack_pointer(binary_code):
     binary_code[1] = (len(binary_code)*4).to_bytes(4, byteorder='big')
