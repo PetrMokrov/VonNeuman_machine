@@ -21,11 +21,13 @@ Supported command line arguments for `.\sources\comiler.py` are following:
 
 The example of using the script:
 ```
-> python .\sources\comiler.py -s "path\to\my\program\file" -n "my_compiled_file"
+> python .\sources\comiler.py -s path\to\my\program\file -n my_compiled_file
 ```
 
 A binary file can be executed on VM by launching `.\sources\vm.py` script:
 To execute the binary file, just pass the path to binary file as the command line argument as following:
 ```
-> python .\sources\vm.py "path\to\binary\program\file"
+> python .\sources\vm.py path\to\binary\program\file
 ```
+
+Be careful with the depth of recursion. Size of stack is bounded by 1024 bytes.
