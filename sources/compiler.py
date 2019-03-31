@@ -675,7 +675,7 @@ def set_exec(binary_code, command, lsp_address, variable_offsets_addresses, func
             start_offset = 'R3')
         
         # move new variable to register
-        command_addr = binarised_commands_dict['mov']
+        command_addr = binarised_commands_dict['rec']
         binary_code.append(command_addr)
         binary_code.append(registers_addresses["R2"])
         binary_code.append(registers_addresses['SP'])
@@ -714,8 +714,13 @@ def set_ret(binary_code, command, lsp_address, variable_offsets_addresses, own_f
         binary_code.append(command_addr)
 
         # add jmp_addr
-        own_func_index -= 1
-        jmp_addr = (own_func_index*4).to_bytes(4, byteorder='big')
+        # address of the function
+        func_address = binary_code[own_func_index]
+        index = 0
+        index = index.from_bytes(func_address, byteorder='big') - 4
+        
+        # previous address, which points to stack cleaner
+        jmp_addr = index.to_bytes(4, byteorder='big')
         binary_code.append(jmp_addr)
     
     if command['command'] == 'retif':
@@ -735,8 +740,13 @@ def set_ret(binary_code, command, lsp_address, variable_offsets_addresses, own_f
         binary_code.append(registers_addresses['R1'])
 
         # add jmp_addr
-        own_func_index -= 1
-        jmp_addr = (own_func_index*4).to_bytes(4, byteorder='big')
+        # address of the function
+        func_address = binary_code[own_func_index]
+        index = 0
+        index = index.from_bytes(func_address, byteorder='big') - 4
+        
+        # previous address, which points to stack cleaner
+        jmp_addr = index.to_bytes(4, byteorder='big')
         binary_code.append(jmp_addr)
         
 
@@ -876,8 +886,7 @@ with open(target_path, 'wb') as f:
     for item in binary_code:
         f.write(item)
 
-
-#functions[0].to_json('main.json')
+# functions[0].to_json('main.json')
 # functions[1].to_json('fibbonachi.json')
 
 
